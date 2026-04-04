@@ -1,0 +1,48 @@
+[
+  {
+    "id": "rag_001",
+    "query": "What is a Generator type in Human Design?",
+    "expected_keywords": ["generator", "sacral", "respond", "energy"]
+  },
+  {
+    "id": "rag_002",
+    "query": "What does emotional authority mean?",
+    "expected_keywords": ["emotional", "wave", "clarity", "time"]
+  },
+  {
+    "id": "rag_003",
+    "chart_data": {
+      "type": "Generator",
+      "authority": "Sacral",
+      "profile": "4/6",
+      "defined_centers": ["Sacral", "Throat", "Solar Plexus"],
+      "active_channels": ["34-20"]
+    },
+    "query": "What does my type mean for my career?",
+    "expected_keywords": ["career", "respond", "sacral", "energy"]
+  },
+  {
+    "id": "rag_004",
+    "chart_data": {
+      "type": "Projector",
+      "authority": "Splenic",
+      "profile": "2/4",
+      "defined_centers": ["Spleen", "Ajna", "Throat"],
+      "active_channels": ["57-20"]
+    },
+    "query": "How should I make decisions in relationships?",
+    "expected_keywords": ["splenic", "relationships", "invite", "intuition"]
+  },
+  {
+    "id": "rag_005",
+    "chart_data": {
+      "type": "Manifesting Generator",
+      "authority": "Emotional",
+      "profile": "1/3",
+      "defined_centers": ["Sacral", "Throat", "Solar Plexus", "Root"],
+      "active_channels": ["35-36", "3-60"]
+    },
+    "query": "What is a good strategy for avoiding burnout?",
+    "expected_keywords": ["burnout", "pace", "response", "rest"]
+  }
+]
