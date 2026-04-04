@@ -1,0 +1,57 @@
+[
+  {
+    "id": "vision_001",
+    "image_path": "datasets/images/sample1.png",
+    "expected_chart_data": {
+      "type": "Generator",
+      "authority": "Sacral",
+      "profile": "4/6",
+      "defined_centers": ["Sacral", "Throat", "Solar Plexus"],
+      "active_channels": ["34-20"]
+    }
+  },
+  {
+    "id": "vision_002",
+    "image_path": "datasets/images/sample2.png",
+    "expected_chart_data": {
+      "type": "Projector",
+      "authority": "Splenic",
+      "profile": "2/4",
+      "defined_centers": ["Spleen", "Ajna", "Throat"],
+      "active_channels": ["57-20"]
+    }
+  },
+  {
+    "id": "vision_003",
+    "image_path": "datasets/images/sample3.png",
+    "expected_chart_data": {
+      "type": "Manifesting Generator",
+      "authority": "Emotional",
+      "profile": "1/3",
+      "defined_centers": ["Sacral", "Throat", "Solar Plexus", "Root"],
+      "active_channels": ["35-36", "3-60"]
+    }
+  },
+  {
+    "id": "vision_004",
+    "image_path": "datasets/images/sample4.png",
+    "expected_chart_data": {
+      "type": "Manifestor",
+      "authority": "Ego",
+      "profile": "5/1",
+      "defined_centers": ["Ego", "Throat", "Root"],
+      "active_channels": ["21-45"]
+    }
+  },
+  {
+    "id": "vision_005",
+    "image_path": "datasets/images/sample5.png",
+    "expected_chart_data": {
+      "type": "Reflector",
+      "authority": "Lunar",
+      "profile": "3/5",
+      "defined_centers": [],
+      "active_channels": []
+    }
+  }
+]
