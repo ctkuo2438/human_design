@@ -357,6 +357,8 @@ def main():
                 print(f"  [Vision] Calling /vision API...")
                 img_b64 = load_image_from_s3(case["image_s3_key"])
                 actual_chart = call_vision_api(img_b64)
+                print(f"  [Vision] Expected: {json.dumps(case['expected_chart_data'], indent=2)}")
+                print(f"  [Vision] Actual:   {json.dumps(actual_chart, indent=2)}")
                 vision_score, field_scores = evaluate_vision(
                     case["expected_chart_data"], actual_chart
                 )
