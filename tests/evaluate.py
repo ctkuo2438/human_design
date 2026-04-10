@@ -2,9 +2,6 @@
 Phase 5: Golden Dataset Evaluation Script
 Runs vision accuracy + RAG quality tests, logs results to MLflow.
 Called by GitHub Actions on every push.
-
-This CI/CD pipeline is the auto-test after the developer pushes code.
-Not for the real-time guardrails during inference.
 """
 
 import json
@@ -30,33 +27,166 @@ COMPLETENESS_THRESHOLD = 3.0
 
 
 # ============================================================
-# Part 1: Vision Accuracy (field-by-field exact match)
+# Part 1: Vision Accuracy (normalized fuzzy match)
 # ============================================================
 
-# compare the golden chart_data with the actual chart_data returned by /vision, field by field, and calculate an overall accuracy score. 
-# For list fields (centers, channels), use F1 score based on set overlap. 
-# For string fields, use exact match (case-insensitive).
+# --- Normalize maps: map common variants to a canonical form ---
+AUTHORITY_MAP = {
+    "emotional": "emotional/solar plexus",
+    "solar plexus": "emotional/solar plexus",
+    "emotional - solar plexus": "emotional/solar plexus",
+    "emotional/solar plexus": "emotional/solar plexus",
+    "emotional solar plexus": "emotional/solar plexus",
+    "sacral": "sacral",
+    "splenic": "splenic",
+    "spleen": "splenic",
+    "ego": "ego",
+    "heart": "ego",
+    "self-projected": "self-projected",
+    "self projected": "self-projected",
+    "lunar": "lunar cycle",
+    "lunar cycle": "lunar cycle",
+    "moon": "lunar cycle",
+    "none": "lunar cycle",
+    "no authority": "lunar cycle",
+    "outer authority": "lunar cycle",
+    "environment": "environment",
+}
+
+STRATEGY_MAP = {
+    "to respond": "to respond",
+    "wait to respond": "to respond",
+    "responding": "to respond",
+    "wait for the invitation": "wait for the invitation",
+    "wait for invitation": "wait for the invitation",
+    "being invited": "wait for the invitation",
+    "wait for recognition and the invitation": "wait for the invitation",
+    "to inform": "to inform",
+    "inform": "to inform",
+    "informing": "to inform",
+    "wait a lunar cycle": "wait a lunar cycle",
+    "wait 28 days": "wait a lunar cycle",
+    "lunar cycle": "wait a lunar cycle",
+}
+
+TYPE_MAP = {
+    "generator": "generator",
+    "pure generator": "generator",
+    "manifesting generator": "manifesting generator",
+    "mani-gen": "manifesting generator",
+    "manifestor": "manifestor",
+    "projector": "projector",
+    "reflector": "reflector",
+}
+
+DEFINITION_MAP = {
+    "single": "single",
+    "single definition": "single",
+    "split": "split",
+    "split definition": "split",
+    "triple split": "triple split",
+    "triple split definition": "triple split",
+    "quadruple split": "quadruple split",
+    "none": "none",
+    "no definition": "none",
+}
+
+CENTER_MAP = {
+    "head": "head",
+    "crown": "head",
+    "ajna": "ajna",
+    "mind": "ajna",
+    "throat": "throat",
+    "g": "g/self",
+    "g center": "g/self",
+    "g/self": "g/self",
+    "self": "g/self",
+    "identity": "g/self",
+    "heart": "heart/will/ego",
+    "will": "heart/will/ego",
+    "ego": "heart/will/ego",
+    "heart/will/ego": "heart/will/ego",
+    "heart/ego": "heart/will/ego",
+    "will/ego": "heart/will/ego",
+    "sacral": "sacral",
+    "solar plexus": "solar plexus/emotional",
+    "emotional": "solar plexus/emotional",
+    "solar plexus/emotional": "solar plexus/emotional",
+    "emotional/solar plexus": "solar plexus/emotional",
+    "spleen": "spleen",
+    "splenic": "spleen",
+    "root": "root",
+}
+
+
+def normalize_value(val, field):
+    """Normalize a value based on field type."""
+    if val is None:
+        return val
+    s = str(val).lower().strip()
+
+    if field == "type":
+        return TYPE_MAP.get(s, s)
+    elif field == "authority":
+        return AUTHORITY_MAP.get(s, s)
+    elif field == "strategy":
+        return STRATEGY_MAP.get(s, s)
+    elif field == "definition":
+        return DEFINITION_MAP.get(s, s)
+    return s
+
+
+def normalize_center(c):
+    """Normalize a single center name."""
+    return CENTER_MAP.get(c.lower().strip(), c.lower().strip())
+
+
+def normalize_channel(ch):
+    """Normalize channel: sort gate numbers so '59-6' == '6-59'."""
+    parts = str(ch).strip().split("-")
+    if len(parts) == 2:
+        try:
+            return "-".join(sorted(parts, key=int))
+        except ValueError:
+            pass
+    return ch.lower().strip()
+
+
 def evaluate_vision_field(expected, actual, field):
-    """
-    Compare a single field between expected and actual chart_data.
-    """
+    """Compare a single field between expected and actual chart_data."""
     exp_val = expected.get(field)
     act_val = actual.get(field)
 
     if exp_val is None:
         return None  # skip if not in golden data
 
-    # For list fields (centers, channels): compare as sets
+    # For list fields (centers, channels): compare as normalized sets
     if isinstance(exp_val, list):
-        exp_set = set(exp_val)
-        act_set = set(act_val) if isinstance(act_val, list) else set()
+        if field in ("defined_centers", "undefined_centers"):
+            exp_set = set(normalize_center(c) for c in exp_val)
+            act_set = set(normalize_center(c) for c in act_val) if isinstance(act_val, list) else set()
+        elif field == "active_channels":
+            exp_set = set(normalize_channel(c) for c in exp_val)
+            act_set = set(normalize_channel(c) for c in act_val) if isinstance(act_val, list) else set()
+        else:
+            exp_set = set(exp_val)
+            act_set = set(act_val) if isinstance(act_val, list) else set()
+
+        # Handle empty expected (e.g. Reflector with no channels)
+        if len(exp_set) == 0 and len(act_set) == 0:
+            return 1.0
+        if len(exp_set) == 0 and len(act_set) > 0:
+            return 0.0
+
         precision = len(exp_set & act_set) / len(act_set) if act_set else 0
         recall = len(exp_set & act_set) / len(exp_set) if exp_set else 0
         f1 = 2 * precision * recall / (precision + recall) if (precision + recall) > 0 else 0
         return f1
 
-    # For string fields: exact match (case-insensitive)
-    return 1.0 if str(exp_val).lower().strip() == str(act_val).lower().strip() else 0.0
+    # For string fields: normalized match
+    exp_norm = normalize_value(exp_val, field)
+    act_norm = normalize_value(act_val, field)
+    return 1.0 if exp_norm == act_norm else 0.0
 
 
 def evaluate_vision(expected_chart, actual_chart):
@@ -78,7 +208,6 @@ def evaluate_vision(expected_chart, actual_chart):
 # Part 2: RAG Quality (LLM-as-Judge)
 # ============================================================
 
-# LLM will compare the RAG response against the expected key facts and chart data, and score it on faithfulness, relevance, and completeness.
 JUDGE_PROMPT = """You are an evaluator for a Human Design reading system.
 
 Given:
@@ -110,9 +239,7 @@ Return ONLY a JSON object with no other text:
 
 
 def call_anthropic(prompt, max_tokens=200):
-    """
-    Call Anthropic API using urllib (no SDK dependency).
-    """
+    """Call Anthropic API using urllib (no SDK dependency)."""
     payload = json.dumps({
         "model": "claude-sonnet-4-20250514",
         "max_tokens": max_tokens,
@@ -135,9 +262,7 @@ def call_anthropic(prompt, max_tokens=200):
 
 
 def judge_rag_response(question, chart_data, response, expected_facts):
-    """
-    Use LLM-as-Judge to score RAG response quality.
-    """
+    """Use LLM-as-Judge to score RAG response quality."""
     facts_str = "\n".join(f"  - {f}" for f in expected_facts)
     prompt = JUDGE_PROMPT.format(
         question=question,
@@ -159,10 +284,7 @@ def judge_rag_response(question, chart_data, response, expected_facts):
 # ============================================================
 
 def call_vision_api(image_b64, media_type="image/png"):
-    """
-    Call /vision endpoint via API Gateway.
-    Get back the parsed chart_data for the input image.
-    """
+    """Call /vision endpoint via API Gateway."""
     import requests
     resp = requests.post(
         f"{API_BASE}/vision",
@@ -178,9 +300,7 @@ def call_vision_api(image_b64, media_type="image/png"):
 
 
 def call_reading_api(chart_data, query):
-    """
-    Call RAG Lambda directly via boto3 (bypasses API Gateway timeout).
-    """
+    """Call RAG Lambda directly via boto3 (bypasses API Gateway timeout)."""
     lambda_client = boto3.client("lambda", region_name="us-east-1")
     payload = {"chart_data": chart_data, "query": query}
     resp = lambda_client.invoke(
