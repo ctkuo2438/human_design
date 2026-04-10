@@ -1,0 +1,59 @@
+# .github/workflows/evaluate.yml
+# Phase 5: CI/CD — Run Golden Dataset evaluation on every push
+
+name: Golden Dataset Evaluation
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'lambda/**'          # trigger on Lambda code changes
+      - 'prompts/**'         # trigger on prompt changes
+      - 'tests/**'           # trigger on test changes
+
+  workflow_dispatch:          # allow manual trigger
+
+jobs:
+  evaluate:
+    runs-on: ubuntu-latest    # virtual environment for the runs
+    timeout-minutes: 30       # RAG Lambda cold start can take ~3 min per case
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          pip install boto3 mlflow requests
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-session-token: ${{ secrets.AWS_SESSION_TOKEN }}
+          aws-region: us-east-1
+
+      - name: Run Golden Dataset Evaluation
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          API_BASE: ${{ secrets.API_BASE }}
+          MLFLOW_TRACKING_URI: ${{ secrets.MLFLOW_TRACKING_URI }}
+          S3_BUCKET: ${{ secrets.S3_BUCKET }}
+          PROMPT_VERSION: ${{ github.sha }}
+        run: |
+          python tests/evaluate.py
+
+      # If evaluate.py exits with code 1, this step won't run
+      - name: Evaluation passed
+        if: success()
+        run: echo "All metrics above threshold. Safe to deploy."
+
+      - name: Evaluation failed
+        if: failure()
+        run: echo "Metrics below threshold. Deployment blocked."
