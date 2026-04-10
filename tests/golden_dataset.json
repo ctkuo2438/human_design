@@ -1,0 +1,235 @@
+[
+  {
+    "test_id": "test_001",
+    "description": "Albert Einstein - Generator",
+    "image_s3_key": "golden-dataset/albert_einstein.png",
+    "expected_chart_data": {
+      "type": "Generator",
+      "authority": "Emotional/Solar Plexus",
+      "profile": "1/4",
+      "strategy": "To Respond",
+      "definition": "Split",
+      "defined_centers": ["Sacral", "Solar Plexus/Emotional", "Root", "Spleen", "G/Self"],
+      "undefined_centers": ["Head", "Ajna", "Throat", "Heart/Will/Ego"],
+      "active_channels": ["59-6", "41-30", "25-51"]
+    },
+    "test_query": "What career path suits me best?",
+    "expected_key_facts": [
+      "Should mention Generator type with sustained life-force energy",
+      "Should reference Emotional/Solar Plexus authority and waiting for emotional clarity",
+      "Should mention Profile 1/4 (Investigator/Opportunist) and need for deep research",
+      "Should advise waiting to respond rather than initiating",
+      "Should NOT mention channels or centers not present in chart_data"
+    ]
+  },
+  {
+    "test_id": "test_002",
+    "description": "Andy - Generator",
+    "image_s3_key": "golden-dataset/andy.png",
+    "expected_chart_data": {
+      "type": "Generator",
+      "authority": "Sacral",
+      "profile": "1/4",
+      "strategy": "To Respond",
+      "definition": "Single",
+      "defined_centers": ["Sacral", "Root", "Spleen", "G/Self"],
+      "undefined_centers": ["Head", "Ajna", "Throat", "Solar Plexus/Emotional", "Heart/Will/Ego"],
+      "active_channels": ["3-60", "10-57", "10-34"]
+    },
+    "test_query": "How should I approach my career decisions?",
+    "expected_key_facts": [
+      "Should mention Generator type with consistent Sacral energy",
+      "Should reference Sacral authority and gut-response decision-making",
+      "Should mention Profile 1/4 (Investigator/Opportunist)",
+      "Should advise waiting to respond to opportunities",
+      "Should NOT fabricate channels or centers not in chart_data"
+    ]
+  },
+  {
+    "test_id": "test_003",
+    "description": "Frida Kahlo - Manifestor",
+    "image_s3_key": "golden-dataset/frida_kahlo.png",
+    "expected_chart_data": {
+      "type": "Manifestor",
+      "authority": "Emotional/Solar Plexus",
+      "profile": "5/1",
+      "strategy": "To Inform",
+      "definition": "Split",
+      "defined_centers": ["Throat", "G/Self", "Solar Plexus/Emotional", "Root", "Head"],
+      "undefined_centers": ["Ajna", "Sacral", "Spleen", "Heart/Will/Ego"],
+      "active_channels": ["12-22", "10-57", "39-55"]
+    },
+    "test_query": "What is my ideal creative expression?",
+    "expected_key_facts": [
+      "Should mention Manifestor type and initiating energy",
+      "Should reference Emotional/Solar Plexus authority and waiting for clarity",
+      "Should mention Profile 5/1 (Heretic/Investigator) and practical problem-solving",
+      "Should advise informing others before taking action",
+      "Should NOT mention centers or channels not in chart_data"
+    ]
+  },
+  {
+    "test_id": "test_004",
+    "description": "Margaret Atwood - Reflector",
+    "image_s3_key": "golden-dataset/margaret_atwood.png",
+    "expected_chart_data": {
+      "type": "Reflector",
+      "authority": "Lunar Cycle",
+      "profile": "2/4",
+      "strategy": "Wait a Lunar Cycle",
+      "definition": "None",
+      "defined_centers": [],
+      "undefined_centers": ["Head", "Ajna", "Throat", "G/Self", "Heart/Will/Ego", "Solar Plexus/Emotional", "Sacral", "Spleen", "Root"],
+      "active_channels": []
+    },
+    "test_query": "How should I make important life decisions?",
+    "expected_key_facts": [
+      "Should mention Reflector type and its extreme rarity (1% of population)",
+      "Should reference Lunar Cycle authority and waiting 28 days for major decisions",
+      "Should mention Profile 2/4 (Hermit/Opportunist)",
+      "Should mention all centers are undefined/open",
+      "Should advise being mindful of environmental influences",
+      "Should NOT fabricate any defined centers or active channels"
+    ]
+  },
+  {
+    "test_id": "test_005",
+    "description": "Maya Angelou - Manifestor",
+    "image_s3_key": "golden-dataset/maya_angelou.png",
+    "expected_chart_data": {
+      "type": "Manifestor",
+      "authority": "Splenic",
+      "profile": "6/2",
+      "strategy": "To Inform",
+      "definition": "Single",
+      "defined_centers": ["Throat", "G/Self", "Spleen", "Heart/Will/Ego", "Root"],
+      "undefined_centers": ["Head", "Ajna", "Solar Plexus/Emotional", "Sacral"],
+      "active_channels": ["21-45", "16-48", "25-51"]
+    },
+    "test_query": "What are my greatest strengths and how should I use them?",
+    "expected_key_facts": [
+      "Should mention Manifestor type and ability to initiate independently",
+      "Should reference Splenic authority and in-the-moment intuitive decisions",
+      "Should mention Profile 6/2 (Role Model/Hermit) three-phase life pattern",
+      "Should advise informing others before acting",
+      "Should NOT mention centers or channels not in chart_data"
+    ]
+  },
+  {
+    "test_id": "test_006",
+    "description": "Barack Obama - Projector",
+    "image_s3_key": "golden-dataset/barack_obama.png",
+    "expected_chart_data": {
+      "type": "Projector",
+      "authority": "Emotional/Solar Plexus",
+      "profile": "6/2",
+      "strategy": "Wait for the Invitation",
+      "definition": "Single",
+      "defined_centers": ["Ajna", "Solar Plexus/Emotional", "Root"],
+      "undefined_centers": ["Head", "Throat", "G/Self", "Heart/Will/Ego", "Sacral", "Spleen"],
+      "active_channels": ["41-30"]
+    },
+    "test_query": "What leadership style suits me best?",
+    "expected_key_facts": [
+      "Should mention Projector type and its guiding/advisory nature",
+      "Should reference Emotional/Solar Plexus authority and waiting for emotional clarity",
+      "Should mention Profile 6/2 (Role Model/Hermit) and three life phases",
+      "Should advise waiting for recognition and invitation before leading",
+      "Should NOT fabricate channels or centers not in chart_data"
+    ]
+  },
+  {
+    "test_id": "test_007",
+    "description": "Oprah Winfrey - Generator",
+    "image_s3_key": "golden-dataset/oprah_winfrey.png",
+    "expected_chart_data": {
+      "type": "Generator",
+      "authority": "Emotional/Solar Plexus",
+      "profile": "2/4",
+      "strategy": "To Respond",
+      "definition": "Triple Split",
+      "defined_centers": ["Head", "Ajna", "Sacral", "Solar Plexus/Emotional", "G/Self", "Spleen", "Root"],
+      "undefined_centers": ["Throat", "Heart/Will/Ego"],
+      "active_channels": ["19-49", "24-61", "29-46"]
+    },
+    "test_query": "How can I best use my energy in relationships?",
+    "expected_key_facts": [
+      "Should mention Generator type with sustainable life-force energy",
+      "Should reference Emotional/Solar Plexus authority and emotional wave",
+      "Should mention Profile 2/4 (Hermit/Opportunist)",
+      "Should advise responding to opportunities in relationships",
+      "Should NOT mention channels or centers not in chart_data"
+    ]
+  },
+  {
+    "test_id": "test_008",
+    "description": "Princess Diana - Projector",
+    "image_s3_key": "golden-dataset/princess_diana.png",
+    "expected_chart_data": {
+      "type": "Projector",
+      "authority": "Emotional/Solar Plexus",
+      "profile": "1/3",
+      "strategy": "Wait for the Invitation",
+      "definition": "Split",
+      "defined_centers": ["Head", "Ajna", "Solar Plexus/Emotional", "Root", "Heart/Will/Ego", "G/Self"],
+      "undefined_centers": ["Throat", "Sacral", "Spleen"],
+      "active_channels": ["63-4", "37-40", "41-30"]
+    },
+    "test_query": "What is my ideal relationship dynamic?",
+    "expected_key_facts": [
+      "Should mention Projector type needing recognition and invitation",
+      "Should reference Emotional/Solar Plexus authority and emotional clarity",
+      "Should mention Profile 1/3 (Investigator/Martyr) and learning through experience",
+      "Should advise waiting for invitations in major life decisions",
+      "Should NOT fabricate channels or centers not in chart_data"
+    ]
+  },
+  {
+    "test_id": "test_009",
+    "description": "Rosalynn Carter - Reflector",
+    "image_s3_key": "golden-dataset/rosalynn_carter.png",
+    "expected_chart_data": {
+      "type": "Reflector",
+      "authority": "Lunar Cycle",
+      "profile": "6/3",
+      "strategy": "Wait a Lunar Cycle",
+      "definition": "None",
+      "defined_centers": [],
+      "undefined_centers": ["Head", "Ajna", "Throat", "G/Self", "Heart/Will/Ego", "Solar Plexus/Emotional", "Sacral", "Spleen", "Root"],
+      "active_channels": []
+    },
+    "test_query": "How can I find my purpose in life?",
+    "expected_key_facts": [
+      "Should mention Reflector type and its mirror-like quality",
+      "Should reference Lunar Cycle authority and 28-day decision process",
+      "Should mention Profile 6/3 (Role Model/Martyr) and trial-and-error learning",
+      "Should mention all centers are undefined/open",
+      "Should advise choosing environments and communities carefully",
+      "Should NOT fabricate any defined centers or active channels"
+    ]
+  },
+  {
+    "test_id": "test_010",
+    "description": "Sandra Bullock - Reflector",
+    "image_s3_key": "golden-dataset/sandra_bullock.png",
+    "expected_chart_data": {
+      "type": "Reflector",
+      "authority": "Lunar Cycle",
+      "profile": "2/4",
+      "strategy": "Wait a Lunar Cycle",
+      "definition": "None",
+      "defined_centers": [],
+      "undefined_centers": ["Head", "Ajna", "Throat", "G/Self", "Heart/Will/Ego", "Solar Plexus/Emotional", "Sacral", "Spleen", "Root"],
+      "active_channels": []
+    },
+    "test_query": "What work environment is best for me?",
+    "expected_key_facts": [
+      "Should mention Reflector type and sensitivity to environment",
+      "Should reference Lunar Cycle authority and waiting 28 days for big decisions",
+      "Should mention Profile 2/4 (Hermit/Opportunist)",
+      "Should emphasize importance of healthy work environment for Reflectors",
+      "Should advise being selective about people and places",
+      "Should NOT fabricate any defined centers or active channels"
+    ]
+  }
+]
